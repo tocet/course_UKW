@@ -1,0 +1,11 @@
+artificialanalysis.ai
+
+platform.openai.com/tokenizer
+
+www.moreusefulthings.com/prompts
+talkai.info/pl/blog/understanding_chatgpt_settings/#google_vignette
+
+Własny LLM/SLM:
+lmstudio.ai/docs/app
+jan.ai
+anythingllm.com
