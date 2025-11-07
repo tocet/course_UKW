@@ -1,0 +1,66 @@
+# Instalacja środowiska n8n na Raspberry Pi 4B (bez Dockera)
+
+# --- 1. Aktualizacja systemu ---
+sudo apt update
+sudo apt upgrade -y
+
+# --- 2. Instalacja Node.js (zalecana wersja LTS 18 lub nowsza) ---
+# n8n wymaga Node.js w wersji co najmniej 18.x (ARM64 wspierany)
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Sprawdzenie wersji:
+node -v
+npm -v
+
+# --- 3. Instalacja dodatkowych narzędzi ---
+sudo apt install -y build-essential python3-pip
+
+# --- 4. Instalacja n8n globalnie ---
+sudo npm install -g n8n
+
+# --- 5. (Opcjonalnie) Utworzenie dedykowanego użytkownika n8n ---
+sudo useradd -m -s /bin/bash n8n
+sudo su - n8n
+
+# --- 6. Ustawienie zmiennych środowiskowych ---
+# Możesz ustawić katalog roboczy i adres hosta/port serwera
+export N8N_PORT=5678
+export N8N_HOST=0.0.0.0
+export N8N_PROTOCOL=http
+export N8N_EDITOR_BASE_URL=http://$N8N_HOST:$N8N_PORT
+export N8N_ENCRYPTION_KEY=$(openssl rand -hex 24)
+
+# --- 7. Uruchomienie n8n ---
+n8n start
+
+# n8n będzie dostępny pod adresem:
+# http://<adres_IP_Raspberry_Pi>:5678
+
+# --- 8. (Opcjonalnie) Automatyczne uruchamianie n8n przy starcie systemu ---
+# Utwórz plik usługi systemd:
+sudo nano /etc/systemd/system/n8n.service
+
+# Wklej poniższą konfigurację:
+[Unit]
+Description=n8n workflow automation
+After=network.target
+
+[Service]
+Type=simple
+User=n8n
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=N8N_PORT=5678
+ExecStart=/usr/bin/n8n
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
+# Zapisz i uruchom usługę:
+sudo systemctl daemon-reload
+sudo systemctl enable n8n
+sudo systemctl start n8n
+
+# Sprawdź status:
+sudo systemctl status n8n
