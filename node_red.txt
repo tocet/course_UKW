@@ -1,8 +1,14 @@
+1. Instalacja Node-RED
 sudo apt install -y build-essential git curl
-
 bash <(curl -sL https://github.com/node-red/linux-installers/releases/latest/download/update-nodejs-and-nodered-deb)
-
 node-red-pi --max-old-space-size=256
-
 http://localhost:1880
 
+2.Instalacja Ollama
+curl -fsSL https://ollama.com/install.sh | sh
+
+3. Uruchomienie Ollama
+ollama --version
+
+4. Pobranie modelu
+ollama run tinyllama
